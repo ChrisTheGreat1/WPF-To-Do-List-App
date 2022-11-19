@@ -1,0 +1,233 @@
+﻿<Window x:Class="ToDo_App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+
+        <Style TargetType="{x:Type Button}" x:Key="mainMenuButton">
+            <Setter Property="Padding" Value="10,1" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Height" Value="25" />
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="formatImageStyle">
+            <Setter Property="Width" Value="30"></Setter>
+            <Setter Property="CommandTarget" Value="{Binding ElementName=rtbEditor}"></Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ToggleButton}" x:Key="formatImageStyleToggle">
+            <Setter Property="Width" Value="30"></Setter>
+            <Setter Property="CommandTarget" Value="{Binding ElementName=rtbEditor}"></Setter>
+        </Style>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
+        <CommandBinding Command="ApplicationCommands.Save" Executed="Save_Executed" />
+    </Window.CommandBindings>
+
+    <TabControl TabStripPlacement="Top">
+
+        <TabItem Name="tabStartMenu" Header="Start Menu" GotFocus="tabItems_GotFocus_ClearEditedItem">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Style="{StaticResource mainMenuButton}" Name="btnToDoList" Click="btnToDoList_Click" Width="150">To-Do List</Button>
+                <Button Style="{StaticResource mainMenuButton}" Name="btnWeather" Click="btnWeather_Click" Width="150">Check Weather</Button>
+                <Button Style="{StaticResource mainMenuButton}" Name="btnEmail" Click="btnEmail_Click"  Width="150">Emails</Button>
+            </StackPanel>
+        </TabItem>
+
+        <TabItem Name="tabCreateEditDelete" Header="Create/Edit/Delete Item" GotFocus="tabItems_GotFocus_ClearEditedItem">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{StaticResource mainMenuButton}" Name="btnCreate" Click="btnCreate_Click">Create To-Do List Item</Button>
+                    <Button Style="{StaticResource mainMenuButton}" Name="btnEdit" Click="btnEdit_Click">Edit To-Do List Item</Button>
+                    <Button Style="{StaticResource mainMenuButton}" Name="btnDelete" Click="btnDelete_Click">Delete To-Do List Item</Button>
+                </StackPanel>
+
+                <Grid Name="gridEditItem" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Button Name="btnEditCancel" Grid.Row="0" Click="btnEditCancel_Click">Cancel</Button>
+
+                    <ListView Name="lvSelectEditItem" SelectionChanged="lvSelectEditItem_SelectionChanged" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Title" Width="Auto" DisplayMemberBinding="{Binding Title}" />
+                                <GridViewColumn Header="Date" Width="Auto" DisplayMemberBinding="{Binding Date}" />
+                                <GridViewColumn Header="Details" Width="Auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock TextWrapping="NoWrap" MaxHeight="20" Text="{Binding Contents}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+                <Grid Name="gridDeleteItem" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Button Name="btnDeleteCancel" Grid.Row="0" Click="btnDeleteCancel_Click">Cancel</Button>
+
+                    <ListView Name="lvSelectDeleteItem" SelectionChanged="lvSelectDeleteItem_SelectionChanged" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Title" Width="Auto" DisplayMemberBinding="{Binding Title}" />
+                                <GridViewColumn Header="Date" Width="Auto" DisplayMemberBinding="{Binding Date}" />
+                                <GridViewColumn Header="Details" Width="Auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock TextWrapping="NoWrap" MaxHeight="20" Text="{Binding Contents}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Grid>
+        </TabItem>
+
+        <TabItem Name="tabEditor" Header="Editor">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.1*"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="0.4*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" Grid.Row="0" Grid.Column="0">
+                    <Label>Title:</Label>
+                    <TextBox Name="tbTitle" Width="500" MaxLength="70" Height="24" BorderThickness="2" BorderBrush="LightGray" Background="Beige" />
+                </StackPanel>
+
+                <DockPanel Grid.Row="1" Grid.ColumnSpan="2">
+                    <ToolBar Name="mainToolBar" Height="30" DockPanel.Dock="Top">
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Save" ToolTip="Save To File">
+                            <Image Source="Images/FileSaveAs.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Open" ToolTip="Open File">
+                            <Image Source="Images/FileOpen.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Click="btnSaveToList_Click" ToolTip="Save Item to To-Do List">
+                            <Image Source="Images/FileSaveToList.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Click="btnSendAsEmail_Click" ToolTip="Send As Email">
+                            <Image Source="Images/FileEmail.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Click="btnSendAsSMS_Click" ToolTip="Send As SMS">
+                            <Image Source="Images/FileSMS.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Cut" ToolTip="Cut">
+                            <Image Source="Images/EditCut.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Copy" ToolTip="Copy">
+                            <Image Source="Images/EditCopy.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Paste" ToolTip="Paste">
+                            <Image Source="Images/EditPaste.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Undo" ToolTip="Undo">
+                            <Image Source="Images/EditUndo.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="ApplicationCommands.Redo" ToolTip="Redo">
+                            <Image Source="Images/EditRedo.png"></Image>
+                        </Button>
+                        <ToggleButton Style="{StaticResource formatImageStyleToggle}" Command="EditingCommands.ToggleBold" ToolTip="Bold">
+                            <Image Source="Images/TextBold.png"></Image>
+                        </ToggleButton>
+                        <ToggleButton Style="{StaticResource formatImageStyleToggle}" Command="EditingCommands.ToggleItalic" ToolTip="Italic">
+                            <Image Source="Images/TextItalic.png"></Image>
+                        </ToggleButton>
+                        <ToggleButton Style="{StaticResource formatImageStyleToggle}" Command="EditingCommands.ToggleUnderline" ToolTip="Underline">
+                            <Image Source="Images/TextUnderline.png"></Image>
+                        </ToggleButton>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.IncreaseFontSize" ToolTip="Grow Font">
+                            <Image Source="Images/CharacterGrowFont.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.DecreaseFontSize" ToolTip="Shrink Font">
+                            <Image Source="Images/CharacterShrinkFont.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.ToggleBullets" ToolTip="Bullets">
+                            <Image Source="Images/ListBullets.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.ToggleNumbering" ToolTip="Numbering">
+                            <Image Source="Images/ListNumbering.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.AlignLeft" ToolTip="Align Left">
+                            <Image Source="Images/ParagraphLeftJustify.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.AlignCenter" ToolTip="Align Center">
+                            <Image Source="Images/ParagraphCenterJustify.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.AlignRight" ToolTip="Align Right">
+                            <Image Source="Images/ParagraphRightJustify.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.AlignJustify" ToolTip="Align Justify">
+                            <Image Source="Images/ParagraphFullJustify.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.IncreaseIndentation" ToolTip="Increase Indent">
+                            <Image Source="Images/ParagraphIncreaseIndentation.png"></Image>
+                        </Button>
+                        <Button Style="{StaticResource formatImageStyle}" Command="EditingCommands.DecreaseIndentation" ToolTip="Decrease Indent">
+                            <Image Source="Images/ParagraphDecreaseIndentation.png"></Image>
+                        </Button>
+                        <ComboBox Name="cmbFontFamily" Width="150" SelectionChanged="cmbFontFamily_SelectionChanged" />
+                    </ToolBar>
+
+                    <RichTextBox Name="rtbEditor" AcceptsTab="True" />
+                </DockPanel>
+
+                <Viewbox Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <DatePicker Name="datePicker"></DatePicker>
+                </Viewbox>
+            </Grid>
+        </TabItem>
+
+        <TabItem Name="tabViewItem" Header="View Item" GotFocus="tabItems_GotFocus_ClearEditedItem">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.3*"></RowDefinition>
+                    <RowDefinition Height="0.7*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <ListView Grid.Row="0" Margin="5" Name="lvDataBinding" SelectionChanged="lvDataBinding_SelectionChanged">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Title" Width="Auto" DisplayMemberBinding="{Binding Title}" />
+                            <GridViewColumn Header="Date" Width="Auto" DisplayMemberBinding="{Binding Date}" />
+                            <GridViewColumn Header="Details" Width="Auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="NoWrap" MaxHeight="20" Text="{Binding Contents}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Border BorderBrush="DimGray" BorderThickness="1" Grid.Row="1" Margin="5">
+                    <TextBlock Name="tbDisplay" TextWrapping="Wrap"></TextBlock>
+                </Border>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>

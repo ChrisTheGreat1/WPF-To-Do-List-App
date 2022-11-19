@@ -1,0 +1,114 @@
+﻿<Window x:Class="ToDo_App.WeatherWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToDo_App" xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        mc:Ignorable="d"
+        Title="WeatherWindow" Height="450" Width="800">
+
+    <Window.Resources>
+
+        <sys:String x:Key="degreesC">(°C)</sys:String>
+
+        <Style x:Key="spWeatherParent" TargetType="{x:Type StackPanel}">
+            <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Grid.Row" Value="2" />
+        </Style>
+
+        <Style x:Key="spWeather" TargetType="{x:Type StackPanel}">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+
+        <Style x:Key="lblDescriptionData" TargetType="{x:Type Label}">
+            <Setter Property="Background" Value="Beige" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="30" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.3*"></RowDefinition>
+            <RowDefinition Height="0.1*"></RowDefinition>
+            <RowDefinition Height="0.6*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.22*"></ColumnDefinition>
+            <ColumnDefinition Width="0.22*"></ColumnDefinition>
+            <ColumnDefinition Width="0.18*"></ColumnDefinition>
+            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10" Grid.Row="0" Grid.ColumnSpan="4">
+            <TextBox Name="tboxCity" Style="{StaticResource watermarkedTextBox}" Tag="City" GotFocus="tbox_GotFocus_SetCursorToEnd" Margin="10" Width="250" Height="24" BorderThickness="2" BorderBrush="LightGray" Background="Beige" />
+            <TextBox Name="tboxCountry" Style="{StaticResource watermarkedTextBox}" Tag="Country" GotFocus="tbox_GotFocus_SetCursorToEnd" Margin="10" Width="250" Height="24" BorderThickness="2" BorderBrush="LightGray" Background="Beige" />
+        </StackPanel>
+
+        <Button Name="btnWeather" Content="Click For Weather" Height="30" Width="150" Click="btnWeather_ClickAsync" Grid.Row="1" Grid.ColumnSpan="4"></Button>
+
+        <StackPanel Style="{StaticResource spWeatherParent}" Grid.Column="0">
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Current Temp. (°C):"></Label>
+                <Label Name="lblCurrentTemp" Style="{StaticResource lblDescriptionData}"></Label>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Feels Like (°C):"></Label>
+                <Label Name="lblFeelsLikeTemp" Style="{StaticResource lblDescriptionData}"></Label>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Min. Temp. (°C):"></Label>
+                <Label Name="lblMinTemp" Style="{StaticResource lblDescriptionData}"></Label>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Max. Temp. (C):"></Label>
+                <Label Name="lblMaxTemp" Style="{StaticResource lblDescriptionData}"></Label>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource spWeatherParent}" Grid.Column="1">
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Wind Speed (m/s):"></Label>
+                <Label Name="lblWindSpeed" Style="{StaticResource lblDescriptionData}"></Label>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource spWeatherParent}" Grid.Column="2">
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Sunrise:"></Label>
+                <Label Name="lblSunrise" Style="{StaticResource lblDescriptionData}" Width="65"></Label>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Sunset:"></Label>
+                <Label Name="lblSunset" Style="{StaticResource lblDescriptionData}" Width="65"></Label>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource spWeatherParent}" Grid.Column="3">
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Current Weather:"></Label>
+                <Label Name="lblCurrentWeather" Style="{StaticResource lblDescriptionData}" Width="Auto" MaxWidth="140"></Label>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource spWeather}">
+                <Label Content="Conditions:"></Label>
+                <Label Name="lblConditions" Style="{StaticResource lblDescriptionData}" Width="Auto" MaxWidth="140"></Label>
+            </StackPanel>
+
+            <Border Background="DimGray" Width="80" Height="80" Margin="10">
+                <Image Width="70" Name="imgWeatherIcon" />
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>
